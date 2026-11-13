@@ -1,0 +1,183 @@
+{
+  "title": "Face Emotion Detector",
+  "subtitle": "Finds faces in a photo or live webcam video and recognises 8 facial expressions. Both neural networks run in your browser with ONNX Runtime Web.",
+  "tags": [
+    "Computer vision",
+    "YOLOv8-face",
+    "EfficientNet-B0",
+    "ONNX Runtime Web",
+    "Webcam"
+  ],
+  "input_size": 320,
+  "conf": 0.25,
+  "iou": 0.7,
+  "emotions": [
+    "Anger",
+    "Contempt",
+    "Disgust",
+    "Fear",
+    "Happiness",
+    "Neutral",
+    "Sadness",
+    "Surprise"
+  ],
+  "samples": [
+    {
+      "file": "samples/zidane.jpg",
+      "label": "Zidane",
+      "credit": "Zinedine Zidane & Carlo Ancelotti (Ultralytics sample image)"
+    },
+    {
+      "file": "samples/bus.jpg",
+      "label": "Bus",
+      "credit": "Street scene (Ultralytics sample image)"
+    },
+    {
+      "file": "samples/astronaut.jpg",
+      "label": "Astronaut",
+      "credit": "Astronaut Eileen Collins (NASA, public domain, via scikit-image)"
+    }
+  ],
+  "model_sizes_mb": {
+    "emotion.onnx": 8.1,
+    "face_detector.onnx": 6.3
+  },
+  "verification": [
+    {
+      "image": "zidane.jpg",
+      "reference": "ultralytics .pt",
+      "ref_faces": 2,
+      "ours_faces": 2,
+      "matched": 2,
+      "min_iou": 0.9701270771009882,
+      "max_box_px": 2.1607666015625,
+      "same_label": 2,
+      "max_prob_diff": 0.004896044731140137
+    },
+    {
+      "image": "zidane.jpg",
+      "reference": "ultralytics .onnx",
+      "ref_faces": 2,
+      "ours_faces": 2,
+      "matched": 2,
+      "min_iou": 0.999801098705641,
+      "max_box_px": 0.0255126953125,
+      "same_label": 2,
+      "max_prob_diff": 0.0022585690021514893
+    },
+    {
+      "image": "bus.jpg",
+      "reference": "ultralytics .pt",
+      "ref_faces": 2,
+      "ours_faces": 2,
+      "matched": 2,
+      "min_iou": 0.9982192951246381,
+      "max_box_px": 0.04443359375,
+      "same_label": 2,
+      "max_prob_diff": 0.002922430634498596
+    },
+    {
+      "image": "bus.jpg",
+      "reference": "ultralytics .onnx",
+      "ref_faces": 2,
+      "ours_faces": 2,
+      "matched": 2,
+      "min_iou": 0.9985717439996384,
+      "max_box_px": 0.03424835205078125,
+      "same_label": 2,
+      "max_prob_diff": 0.002922430634498596
+    },
+    {
+      "image": "astronaut.jpg",
+      "reference": "ultralytics .pt",
+      "ref_faces": 1,
+      "ours_faces": 1,
+      "matched": 1,
+      "min_iou": 0.9994982347977637,
+      "max_box_px": 0.0283203125,
+      "same_label": 1,
+      "max_prob_diff": 3.846963636533474e-09
+    },
+    {
+      "image": "astronaut.jpg",
+      "reference": "ultralytics .onnx",
+      "ref_faces": 1,
+      "ours_faces": 1,
+      "matched": 1,
+      "min_iou": 0.9994980516082043,
+      "max_box_px": 0.0283203125,
+      "same_label": 1,
+      "max_prob_diff": 3.846963636533474e-09
+    }
+  ],
+  "verification_total": {
+    "ref_faces": 10,
+    "matched": 10,
+    "same_label": 10
+  },
+  "benchmark": [
+    {
+      "pipeline": "ultralytics (PyTorch) + HSEmotion",
+      "size": 640,
+      "ms": 225.9,
+      "faces": 2
+    },
+    {
+      "pipeline": "ultralytics (PyTorch) + HSEmotion",
+      "size": 320,
+      "ms": 120.2,
+      "faces": 2
+    },
+    {
+      "pipeline": "ONNX Runtime (browser logic)",
+      "size": 640,
+      "ms": 281.7,
+      "faces": 2
+    },
+    {
+      "pipeline": "ONNX Runtime (browser logic)",
+      "size": 320,
+      "ms": 185.5,
+      "faces": 2
+    }
+  ],
+  "sample_results": {
+    "zidane.jpg": [
+      {
+        "emotion": "Anger",
+        "confidence": 0.33
+      },
+      {
+        "emotion": "Anger",
+        "confidence": 0.896
+      }
+    ],
+    "bus.jpg": [
+      {
+        "emotion": "Neutral",
+        "confidence": 0.366
+      },
+      {
+        "emotion": "Neutral",
+        "confidence": 0.628
+      }
+    ],
+    "astronaut.jpg": [
+      {
+        "emotion": "Happiness",
+        "confidence": 1.0
+      }
+    ]
+  },
+  "steps": [
+    "Detected objects with YOLO11n, then switched to a face-specific YOLOv8n model.",
+    "Cropped each face and classified its expression with HSEmotion (EfficientNet-B0, 8 emotions, AffectNet + AFEW).",
+    "Wrapped both models into one analyze(frame) pipeline and ran it on photos and a webcam stream.",
+    "Benchmarked 640 vs 320 input size: 320 is about 2x faster on CPU and still finds both faces in the test image.",
+    "Exported the detector to ONNX and stored both models' weights as float16 to halve the download.",
+    "Re-implemented letterboxing, YOLO decoding + NMS and the HSEmotion preprocessing in JavaScript, and verified the same logic in NumPy against ultralytics + hsemotion_onnx."
+  ],
+  "repo_url": "https://github.com/ravshanovna-d/face-emotion-detector",
+  "notebook_url": "https://github.com/ravshanovna-d/face-emotion-detector/blob/main/notebook.ipynb",
+  "footer": "Built by <a href=\"https://github.com/ravshanovna-d\">ravshanovna-d</a> \u00b7 Models: YOLOv8n-face (AGPL-3.0) \u00b7 HSEmotion (Apache-2.0)"
+}

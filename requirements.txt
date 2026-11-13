@@ -1,0 +1,10 @@
+numpy
+opencv-python
+ultralytics
+hsemotion-onnx
+onnx
+onnxruntime
+onnxslim
+scikit-image
+matplotlib
+pandas

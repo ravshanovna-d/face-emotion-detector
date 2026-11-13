@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Face Emotion Detector</title>
+  <meta name="description" content="Real-time face detection and facial emotion recognition running entirely in the browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/ort.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">Computer Vision Project</div>
+      <h1 id="title">Face Emotion Detector</h1>
+      <p class="lead" id="lead"></p>
+      <div class="chips" id="chips"></div>
+      <div class="links" id="links"></div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Try it</h2>
+        <p class="sub">Start your webcam, upload a photo, or pick a sample image. Click a face to see its emotion scores.</p>
+        <div class="stage" id="stage">
+          <canvas id="canvas" width="640" height="360" aria-label="Detection result"></canvas>
+          <div class="placeholder" id="stage-msg">Loading models…</div>
+        </div>
+        <div class="hud" id="hud"></div>
+        <div class="actions">
+          <button class="btn primary" id="cam" type="button" disabled>Start webcam</button>
+          <label class="btn" id="upload-btn" for="file">Upload photo</label>
+          <input type="file" id="file" accept="image/*">
+        </div>
+        <div class="samples" id="samples"></div>
+        <div class="privacy"><b>Private by design:</b> nothing is uploaded. Your camera frames and photos are processed locally in this browser tab; the models are downloaded once and run on your device.</div>
+        <video id="video" playsinline muted hidden></video>
+      </section>
+
+      <section class="card result">
+        <h2>Emotion scores</h2>
+        <p class="sub" id="result-sub">The largest face is selected by default.</p>
+        <div class="face-list" id="faces"></div>
+        <div id="bars"><div class="placeholder">No face yet.</div></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Does the browser version match Python?</h2>
+      <p class="sub">The pre/post-processing in this page (letterbox, YOLO decoding + NMS, face crop, HSEmotion normalisation) was re-implemented in NumPy and compared with the original ultralytics + hsemotion_onnx pipeline on the sample images.</p>
+      <div class="metrics" id="metrics"></div>
+      <div class="table-wrap" style="margin-top:16px"><table id="verify"></table></div>
+    </section>
+
+    <section class="card">
+      <h2>Speed: 640 vs 320 input</h2>
+      <p class="sub">Median time per frame on zidane.jpg (laptop CPU, detection + emotion for every face). This demo uses <span id="size-note">320</span> px.</p>
+      <div class="table-wrap"><table id="bench"></table></div>
+      <div class="figs" style="margin-top:16px"><img src="assets/speed.png" alt="Speed comparison chart"></div>
+    </section>
+
+    <section class="card">
+      <h2>What I did</h2>
+      <ul class="steps" id="steps"></ul>
+      <p class="muted" style="margin-top:12px">Licenses: the face detector is a YOLOv8 model trained with Ultralytics (AGPL-3.0); the emotion model is HSEmotion enet_b0_8_best_afew (Apache-2.0, trained on AffectNet/AFEW for research). Sample images: Ultralytics assets and the NASA astronaut photo shipped with scikit-image (public domain).</p>
+    </section>
+
+    <footer id="footer"></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
