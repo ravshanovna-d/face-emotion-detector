@@ -2,7 +2,7 @@
 
 Finds every face in a photo or live webcam video and recognises its facial expression (8 emotions), entirely in the browser.
 
-**[Live demo →](LIVE_DEMO_URL)** — start your webcam, upload a photo or pick a sample image. Both neural networks run locally with ONNX Runtime Web: nothing is uploaded.
+**[Live demo →](https://ravshanovna-face-emotion.vercel.app)** — start your webcam, upload a photo or pick a sample image. Both neural networks run locally with ONNX Runtime Web: nothing is uploaded.
 
 ![Detected faces with emotion labels](web/assets/result_zidane.jpg)
 
